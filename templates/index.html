@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% set page_class = "index" %}
+
+{% block head %}
+  <title>TestPiotral - Strona Główna</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="header">
+  <div class="nav-left">
+    <img src="{{ url_for('static', filename='img/monke.png') }}" class="logo">
+    <span class="brand">TestPiotral</span>
+  </div>
+
+  <nav class="navbar teacher-dropdown">
+    <a href="{{ url_for('index') }}" class="dropbtn">Strona główna</a>
+
+    <div class="dropdown">
+      <button class="dropbtn">Nauczyciel</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('teacher') }}">Panel główny</a>
+        <a href="{{ url_for('teacher_tests') }}">Testy</a>
+        <a href="{{ url_for('grades') }}">Oceny uczniów</a>
+        <a href="{{ url_for('groups_teacher') }}">Grupy zajęć</a>
+      </div>
+    </div>
+
+    {% if page_class == 'index' %}
+<div class="dropdown">
+  <button class="dropbtn">Uczeń</button>
+  <div class="dropdown-content">
+    {% if session.user_id %}
+      <a href="{{ url_for('student') }}">Panel ucznia</a>
+      <a href="{{ url_for('available_tests') }}">Testy</a>
+      <a href="{{ url_for('student_subjects') }}">Przedmioty</a>
+    {% else %}
+      <a href="{{ url_for('register', tab='login') }}">Panel ucznia</a>
+      <a href="{{ url_for('register', tab='login') }}">Testy</a>
+      <a href="{{ url_for('register', tab='login') }}">Przedmioty</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+  </nav>
+
+  <div class="auth-buttons">
+    {% if session.user_id %}
+      <a href="{{ url_for('logout') }}" class="auth-link">Wyloguj się</a>
+    {% else %}
+      <a href="{{ url_for('register', tab='login') }}" class="auth-link">Zaloguj się</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="hero fade-in-scroll">
+  <div class="hero-left">
+    <h1>Aplikacja Testująca</h1>
+    <p>Łatwa w obsłudze i intuicyjna. <strong>TestPiotral</strong> daje Ci wszystkie narzędzia potrzebne do tworzenia bezpiecznych testów — po Twojemu. 
+      <br>Kliknij poniżej, aby rozpocząć.</p>
+    <a href="/register" class="btn3">Zacznij teraz</a>
+  </div>
+  <div class="hero-right">
+    <img src="{{ url_for('static', filename='img/dashboard.png') }}" alt="VISCA EL BARCA">
+  </div>
+</div>
+
+<section class="stats-section fade-in-scroll">
+  <p class="stats-header">Zaufali nam już <strong>2</strong> nauczycieli z całego świata</p>
+  <div class="stats-box">
+    <div class="stat">
+      <h3>0</h3>
+      <p>Szkół</p>
+    </div>
+    <div class="divider"></div>
+    <div class="stat">
+      <h3>1</h3>
+      <p>Uczelni</p>
+    </div>
+    <div class="divider"></div>
+    <div class="stat">
+      <h3>0</h3>
+      <p>Przeprowadzonych testów</p>
+    </div>
+  </div>
+</section>
+
+<section class="security-section fade-in-scroll">
+  <div class="security-content">
+    <div class="security-image">
+      <img src="{{ url_for('static', filename='img/monke_coach.png') }}" alt="Małpka z laptopem">
+    </div>
+    <div class="security-text">
+      <h2>Twoje dane są bezpieczne</h2>
+      <p>
+        Wszystko, co robisz w <strong>TestPiotral</strong> — testy, odpowiedzi, wyniki — są przechowywane bezpiecznie.
+        Masz pełną kontrolę nad swoimi danymi, możesz je edytować, usuwać i mieć do nich dostęp kiedy chcesz.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="why-section fade-in-scroll">
+  <h2 class="why-title">Dlaczego TestPiotral?</h2>
+  <div class="why-content">
+    <div class="why-box">
+      <img class="sketch" src="{{ url_for('static', filename='img/szkic1.png') }}" alt="Szkic 1">
+      <div class="why-text">
+        <h3>99% nauczycieli oszczędza czas</h3>
+        <ul>
+          <li><strong>Automatyczne sprawdzanie</strong> – oszczędzaj czas na ocenianiu.</li>
+          <li><strong>Czytelne odpowiedzi</strong> – koniec z rozszyfrowywaniem bazgrołów.</li>
+          <li><strong>Baza pytań</strong> – twórz nowe testy z istniejących pytań.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="why-box reverse">
+      <img class="sketch" src="{{ url_for('static', filename='img/szkic2.png') }}" alt="Szkic 2">
+      <div class="why-text">
+        <h3>69% użytkowników ufa TestPiotral</h3>
+        <ul>
+          <li><strong>Trzy poziomy zabezpieczeń</strong> – pełna kontrola nad testem.</li>
+          <li><strong>Wykrywanie plagiatu</strong> – uczciwe odpowiedzi gwarantowane.</li>
+          <li><strong>Losowa kolejność pytań</strong> – inny test dla każdego ucznia.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="motto-container fade-in-scroll">
+  <div class="motto-text">
+    <p class="motto-top">Testuj mądrze, ucz się lepiej.</p>
+    <h2 class="motto-main">
+      Twój portal do świata pytań <span>(i czasem odpowiedzi)</span>.
+    </h2>
+    <p class="motto-bottom">
+      Przekonaj się, jak wszechstronny może być <strong>TestPiotral</strong> — zacznij już dziś!
+    </p>
+  </div>
+  <div class="motto-monke">
+    <img src="{{ url_for('static', filename='img/monke-like.png') }}" alt="Małpka TestPiotral z kciukiem w górze">
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>Copyright © Testpiotral 2025</p>
+    <ul class="footer-links">
+      <li>•</li>
+      <li><a href="#">Polityka prywatności</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/scrollanimations.js') }}"></script>
+{% endblock %}

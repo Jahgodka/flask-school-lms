@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% set page_class = "teacher-page" %}
+
+{% block head %}
+  <title>Tworzenie testu</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    .page-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 2rem 4rem;
+      box-sizing: border-box;
+    }
+
+    .back-btn-wrapper {
+      width: auto;
+      padding: 0;
+      margin: 0;
+
+    }
+
+    .back-btn {
+  position: absolute;
+  top: 160px; /* pod navbarem */
+  left: 40px;
+  z-index: 999;
+  display: inline-block;
+  margin-bottom: 2rem;
+  background-color: #eeeeee;
+  color: #333;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid #ccc;
+  transition: all 0.25s ease;
+}
+    .back-btn:hover {
+      background-color: #ddd;
+      transform: scale(1.02);
+    }
+
+    .form-card {
+      background: white;
+      border: 3px solid #138d91;
+      border-radius: 12px;
+      padding: 50px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.07);
+      width: 100%;
+      max-width: 1000px;
+      margin-top: 2rem;
+      height: 800px;
+    }
+
+    .form-card h1 {
+      font-size: 44px;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #041112;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 1.15em;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 14px;
+      font-size: 17px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-actions {
+      text-align: center;
+      margin-top: 95px;
+    }
+
+    .form-actions button {
+      background-color: #138d91;
+      color: white;
+      padding: 16px 60px;
+      font-size: 23px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-actions button:hover {
+      background-color: #0f7c80;
+    }
+
+    .footer {
+      background-color: #f6f6f6;
+      padding: 1.5rem 2rem;
+      font-size: 0.9rem;
+      color: #7a7a7a;
+      border-top: 1px solid #ddd;
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      list-style: none;
+      gap: 0.8rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #7a7a7a;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #333;
+    }
+
+    @media (max-width: 768px) {
+      .main-layout {
+        padding: 2rem 1rem;
+      }
+
+      .form-card {
+        padding: 40px 20px;
+      }
+
+      .back-btn-wrapper {
+        padding: 1rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+  {% include "components/navbar.html" %}
+
+  <div class="back-btn-wrapper">
+    <a href="{{ url_for('teacher_tests') }}" class="back-btn">⬅ Powrót do testów</a>
+  </div>
+
+  <div class="main-layout">
+    <div class="form-card">
+      <h1>Tworzenie nowego testu</h1>
+      <form method="post">
+        <div class="form-group">
+          <label for="title">Tytuł testu:</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Opis testu:</label>
+          <textarea id="description" name="description" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="subject_id">Przedmiot:</label>
+          <select name="subject_id" id="subject_id" required>
+            {% for subject in subjects %}
+              <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">Zapisz test</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>© TestPiotral 2025</p>
+    <ul class="footer-links">
+      <li>•</li>
+      <li><a href="#">Polityka prywatności</a></li>
+    </ul>
+  </div>
+</footer>
+{% endblock %}

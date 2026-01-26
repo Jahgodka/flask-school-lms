@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block head %}
+  <title>Edytuj pytanie</title>
+{% endblock %}
+
+{% block body %}
+<h1>Edytuj pytanie</h1>
+
+<form method="post">
+  <label>Treść pytania:</label>
+  <input type="text" name="question_text" value="{{ question.text }}" required>
+
+  <hr>
+  <h3>Odpowiedzi:</h3>
+
+  {% for opt in question.answer_options %}
+    <div>
+      <label>Odpowiedź:</label>
+      <input type="text" name="option_{{ opt.id }}" value="{{ opt.text }}">
+      <label>
+        <input type="radio" name="correct_option" value="{{ opt.id }}" {% if opt.is_correct %}checked{% endif %}>
+        Poprawna
+      </label>
+    </div>
+  {% endfor %}
+
+  <button type="submit" class="btn">Zapisz zmiany</button>
+</form>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% set page_class = "student-page" %}
+
+{% block head %}
+  <title>{{ test.title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; }
+    .page-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: #f0f2f5;
+      position: relative;
+    }
+
+    .return-btn-wrapper {
+      position: absolute;
+      top: 100px;
+      left: 40px;
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: #eeeeee;
+      color: #333;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      border: 2px solid #ccc;
+      transition: transform 0.2s, background 0.2s;
+      display: inline-block;
+    }
+
+    .back-btn:hover {
+      background: #ddd;
+      transform: scale(1.02);
+    }
+
+    .main-layout {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 6rem 40px 80px;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 900px;
+      background: white;
+      border: 3px solid #138d91;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .panel h1 {
+      font-size: 32px;
+      color: #138d91;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .panel p.description {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      font-style: italic;
+    }
+    .question-block {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    .alert-warning {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #856404;
+      background-color: #fff3cd;
+      border-color: #ffeeba;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 0;
+    }
+
+    form h4 {
+      font-weight: 600;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+      color: #333;
+    }
+
+    .answer-options {
+      padding-left: 20px;
+      margin-bottom: 30px;
+    }
+
+    .form-check {
+      margin-bottom: 12px;
+    }
+
+    .form-check-label {
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .btn-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+    }
+
+    .btn {
+      min-width: 130px;
+      font-weight: 600;
+      border-radius: 8px;
+      margin-top: 40%;
+      padding: 10px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-outline-secondary {
+      background-color: white;
+      border: 2px solid #6c757d;
+      color: #6c757d;
+    }
+    .btn-outline-secondary:hover {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-primary {
+      background-color: #138d91;
+      border: none;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #0f7274;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+      border: none;
+      color: white;
+    }
+    .btn-success:hover {
+      background-color: #218838;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+  <div class="header">
+  <div class="nav-left">
+    <img src="{{ url_for('static', filename='img/monke.png') }}" class="logo">
+    <span class="brand">TestPiotral</span>
+  </div>
+
+  {% if page_class != 'auth-page' %}
+    <div class="auth-buttons">
+      {% if session.user_id %}
+        <a href="{{ url_for('logout') }}" class="auth-link">Wyloguj się</a>
+      {% else %}
+        <a href="{{ url_for('register', tab='login') }}" class="auth-link">Zaloguj się</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+  <div class="main-layout">
+    <div class="panel">
+      <h1>{{ test.title }}</h1>
+      <p class="description">{{ test.description }}</p>
+
+      {% if empty %}
+        <div class="alert alert-warning" role="alert">
+          ⚠️ Ten test nie zawiera żadnych pytań.
+        </div>
+      {% else %}
+        {% set q = questions[current_question] %}
+        <form method="POST">
+          <h4>Pytanie {{ current_question + 1 }} z {{ questions|length }}: {{ q.text }}</h4>
+          <div class="answer-options">
+            {% for option in q.answer_options %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="question_{{ q.id }}" id="option_{{ option.id }}" value="{{ option.id }}">
+                <label class="form-check-label" for="option_{{ option.id }}">
+                  {{ option.text }}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="btn-group">
+            {% if current_question > 0 %}
+              <button type="submit" name="action" value="prev" class="btn btn-outline-secondary">Poprzednie</button>
+            {% else %}
+              <div></div>
+            {% endif %}
+
+            {% if current_question < questions|length - 1 %}
+              <button type="submit" name="action" value="next" class="btn btn-primary">Następne</button>
+            {% else %}
+              <button type="submit" name="action" value="submit" class="btn btn-success">Zatwierdź test</button>
+            {% endif %}
+          </div>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% set page_class = "teacher-page" %}
+
+{% block head %}
+  <title>Panel nauczyciela</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    .page-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f5f7fa;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 3rem 1rem;
+    }
+
+    .back-btn {
+      background: #eeeeee;
+      color: #333;
+      padding: 10px 20px;
+      font-weight: bold;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background: #ddd;
+      transform: scale(1.03);
+    }
+
+    .user-info {
+      font-size: 1.2rem;
+      color: #444;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .teacher-greeting {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #2b3444;
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 3rem;
+      width: 100%;
+      max-width: 1400px;
+      padding: 1rem;
+    }
+
+    .tile {
+      background: white;
+      padding: 3.2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border-top: 6px solid #0f7c80;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 320px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .tile:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .tile h3 {
+      font-size: 2rem;
+      color: #0f7c80;
+      margin-bottom: 1.5rem;
+    }
+
+    .tile p {
+      flex-grow: 1;
+      font-size: 1.15rem;
+      color: #444;
+      margin-bottom: 2.2rem;
+    }
+
+    .tile a {
+      align-self: flex-start;
+      background-color: #0f7c80;
+      color: white;
+      text-decoration: none;
+      padding: 16px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+
+    .tile a:hover {
+      background-color: #0c6368;
+      transform: translateY(-2px);
+    }
+
+
+    .footer {
+      background-color: #f6f6f6;
+      padding: 1.5rem 2rem;
+      font-size: 0.9rem;
+      color: #7a7a7a;
+      border-top: 1px solid #ddd;
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      list-style: none;
+      gap: 0.8rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #7a7a7a;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #333;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div class="page-container">
+    {% include "components/navbar.html" %}
+
+    <div class="header-row">
+      <a href="{{ url_for('index') }}" class="back-btn">⬅ Powrót do strony głównej</a>
+      <div class="user-info">Zalogowany jako: <strong>{{ name }}</strong> ({{ role }})</div>
+    </div>
+
+    <main class="main-content">
+      <h1 class="teacher-greeting">Witaj, {{ name }}!</h1>
+
+      <div class="tile-grid">
+        <div class="tile">
+          <h3>Testy i zadania</h3>
+          <p>Twórz i edytuj testy, sprawdzaj wyniki uczniów.</p>
+          <a href="{{ url_for('teacher_tests') }}">Przejdź do testów</a>
+        </div>
+        <div class="tile">
+          <h3>Oceny uczniów</h3>
+          <p>Przeglądaj informacje o ocenach uczniów</p>
+          <a href="{{ url_for('grades') }}">Zobacz oceny</a>
+        </div>
+        <div class="tile">
+          <h3>Lista uczniów</h3>
+          <p>Dane osobowe i kontakt uczniów do przeglądu.</p>
+          <a href="{{ url_for('studentlist_teacher') }}">Lista uczniów</a>
+        </div>
+        <div class="tile">
+          <h3>Twoje grupy</h3>
+          <p>Zarządzaj grupami i przypisz uczniów do nich.</p>
+          <a href="{{ url_for('groups_teacher') }}">Moje grupy</a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <p>© TestPiotral 2025</p>
+        <ul class="footer-links">
+          <li>•</li>
+          <li><a href="#">Polityka prywatności</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+{% endblock %}

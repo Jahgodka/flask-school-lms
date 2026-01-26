@@ -1,0 +1,32 @@
+<div class="header">
+    <div class="nav-left">
+      <img src="{{ url_for('static', filename='img/monke.png') }}" class="logo">
+      <span class="brand">TestPiotral</span>
+    </div>
+  
+    <nav class="navbar teacher-dropdown">
+      <a href="{{ url_for('index') }}" class="dropbtn">Strona główna</a>
+  
+      {% if page_class != 'auth-page' %}
+        <div class="dropdown">
+          <button class="dropbtn">Nauczyciel</button>
+          <div class="dropdown-content">
+            <a href="{{ url_for('teacher') }}">Panel główny</a>
+            <a href="{{ url_for('teacher_tests') }}">Testy</a>
+            <a href="{{ url_for('grades') }}">Oceny uczniów</a>
+            <a href="{{ url_for('groups_teacher') }}">Grupy zajęć</a>
+          </div>
+        </div>
+      {% endif %}
+    </nav>
+  
+    {% if page_class != 'auth-page' %}
+      <div class="auth-buttons">
+        {% if session.user_id %}
+          <a href="{{ url_for('logout') }}" class="auth-link">Wyloguj się</a>
+        {% else %}
+          <a href="{{ url_for('register', tab='login') }}" class="auth-link">Zaloguj się</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>

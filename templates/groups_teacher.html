@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% set page_class = "teacher-page" %}
+
+{% block head %}
+  <title>Zarządzanie grupami</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body { margin:0; padding:0; height:100%; }
+    .page-container { display:flex; flex-direction:column; min-height:100vh; background:#f0f2f5; position:relative; }
+
+    .return-btn-wrapper { position:absolute; top:100px; left:40px; z-index:10; }
+    .back-btn { background:#eeeeee; color:#333; padding:12px 24px; border-radius:8px; font-weight:bold; text-decoration:none; border:2px solid #ccc; transition:0.2s; }
+    .back-btn:hover { background:#ddd; transform:scale(1.02); }
+
+    .main-layout { flex:1; display:flex; justify-content:center; padding:6rem 40px 60px; }
+    .panel { width:100%; max-width:1600px; background:white; border:3px solid #138d91; border-radius:14px; box-shadow:0 4px 12px rgba(0,0,0,0.1); padding:50px; box-sizing:border-box; }
+    .panel h2 { margin-bottom:40px; font-size:36px; text-align:center; background:linear-gradient(90deg,#000000,#0f7c80); -webkit-background-clip:text; color:transparent; font-weight:900; }
+
+    .top-grid {
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:40px;
+      margin-bottom:50px;
+    }
+
+    .section {
+      background:#fafafa;
+      border:1px solid #ddd;
+      border-radius:10px;
+      padding:30px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.06);
+      display:flex;
+      flex-direction:column;
+      transition: box-shadow .2s;
+    }
+
+    .section:hover { box-shadow:0 4px 16px rgba(0,0,0,0.12); }
+
+    .section h3 { margin-bottom:20px; font-size:20px; text-align:center; font-weight:700; color:#138d91; border-bottom:2px solid #138d9155; padding-bottom:10px; }
+
+    .form-inline { margin-bottom:20px; }
+    .form-inline label { display:block; font-weight:600; margin-bottom:8px; }
+    .form-inline select, .form-inline input { width:100%; padding:10px; font-size:15px; border:1px solid #ccc; border-radius:6px; }
+
+    .actions { display:flex; gap:14px; margin-top:auto; }
+    .btn, .btn-section {
+      flex:1; padding:14px; background:#138d91; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer; transition:background .2s;
+    }
+    .btn:hover, .btn-section:hover { background:#0f7c80; }
+
+    .groups-table {
+      width:100%; border-collapse: collapse; margin-top:40px;
+    }
+
+    .groups-table th, .groups-table td {
+      padding:12px 15px; text-align:left; border-bottom:1px solid #eee;
+    }
+
+    .groups-table thead th {
+      background:#138d91; color:white; font-weight:600;
+    }
+
+    .groups-table tbody tr:hover { background:#fcfcfc; }
+
+    .table-actions button {
+      margin-right:8px; padding:6px 12px;
+      border:none; border-radius:6px;
+      font-size:14px; cursor:pointer; transition:background .2s; color:white;
+    }
+
+    .delete-btn {
+      background-color: #138d91;
+    }
+
+    .delete-btn:hover {
+      background-color: #0f7c80;
+    }
+
+    /* MODAL STYLE */
+    #delete-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 10000;
+      display: none;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .modal-box {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 12px;
+      padding: 30px 40px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .modal-box h3 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .modal-actions .btn-section.cancel {
+      background-color: #ccc;
+      color: #333;
+    }
+
+    .modal-actions .btn-section.cancel:hover {
+      background-color: #bbb;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+  {% include "components/navbar.html" %}
+
+  <div class="return-btn-wrapper">
+    <a href="{{ url_for('teacher') }}" class="back-btn">⬅ Wróć do panelu</a>
+  </div>
+
+  <div class="main-layout">
+    <div class="panel">
+      <h2>Zarządzanie grupami i uczniami</h2>
+
+      <div class="top-grid">
+        <!-- Zarządzaj uczniami -->
+        <div class="section">
+          <h3>Zarządzaj uczniami</h3>
+          <form method="post">
+            <div class="form-inline">
+              <label for="group_id">Do grupy:</label>
+              <select name="group_id" id="group_id">
+                {% for g in groups %}
+                  <option value="{{ g.id }}" {% if g.id == selected_group_id %}selected{% endif %}>{{ g.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-inline">
+              <label for="student_id">Uczeń:</label>
+              <select name="student_id" id="student_id">
+                {% for s in students %}
+                  <option value="{{ s.id }}" {% if s.id == selected_student_id %}selected{% endif %}>{{ s.first_name }} {{ s.last_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="actions">
+              <button type="submit" name="action" value="add" class="btn-section">Dodaj ucznia</button>
+              <button type="submit" name="action" value="remove" class="btn-section">Usuń ucznia</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Nowa grupa -->
+        <div class="section">
+          <h3>Utwórz grupę</h3>
+          <form method="post">
+            <div class="form-inline">
+              <input type="text" name="group_name" placeholder="Nazwa grupy" required>
+            </div>
+            <button type="submit" class="btn-section">Utwórz grupę</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tabela grup -->
+      <table class="groups-table">
+        <thead>
+          <tr>
+            <th>Nazwa grupy</th>
+            <th>Liczba uczniów</th>
+            <th>Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for g in groups %}
+          <tr>
+            <td>{{ g.name }}</td>
+            <td>{{ g.students|length }}</td>
+            <td class="table-actions">
+              <form id="delete-form-{{ g.id }}" action="{{ url_for('delete_group', group_id=g.id) }}" method="post" style="display:inline;">
+                <button class="delete-btn" type="button" onclick="openDeleteModal('delete-form-{{ g.id }}')">Usuń</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="3" style="text-align:center; color:#666;">Brak grup.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DELETE HTML -->
+<div id="delete-modal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box">
+    <h3>Czy na pewno chcesz usunąć tę grupę?</h3>
+    <div class="modal-actions">
+      <button class="btn-section" onclick="confirmDeletion()">Tak, usuń</button>
+      <button class="btn-section cancel" onclick="closeModal()">Anuluj</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>© TestPiotral 2025</p>
+    <ul class="footer-links">
+      <li>•</li><li><a href="#">Polityka prywatności</a></li>
+    </ul>
+  </div>
+</footer>
+
+<!-- JS MODAL OBSŁUGA -->
+<script>
+  let formToSubmit = null;
+
+  function openDeleteModal(formId) {
+    formToSubmit = document.getElementById(formId);
+    document.getElementById('delete-modal').style.display = 'block';
+  }
+
+  function closeModal() {
+    formToSubmit = null;
+    document.getElementById('delete-modal').style.display = 'none';
+  }
+
+  function confirmDeletion() {
+    if (formToSubmit) formToSubmit.submit();
+  }
+</script>
+
+{% endblock %}

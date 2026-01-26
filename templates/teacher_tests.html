@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% set page_class = "teacher-page" %}
+
+{% block head %}
+<title>Twoje testy</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+  html, body { margin:0; padding:0; height:100%; }
+  .page-container { display:flex; flex-direction:column; min-height:100vh; background:#f0f2f5; position:relative; }
+
+  .return-btn-wrapper {
+    position:absolute;
+    top:100px;
+    left:40px;
+    z-index:10;
+  }
+  .back-btn {
+    background:#eeeeee;
+    color:#333;
+    padding:12px 24px;
+    border-radius:8px;
+    font-weight:bold;
+    text-decoration:none;
+    border:2px solid #ccc;
+    transition:transform .2s, background .2s;
+    display:inline-block;
+  }
+  .back-btn:hover { background:#ddd; transform:scale(1.02); }
+
+  .main-layout { flex:1; display:flex; justify-content:center; padding:6rem 40px 60px; }
+  .panel {
+    width:100%; max-width:1600px;
+    background:white;
+    border:3px solid #138d91;
+    border-radius:14px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    padding:50px;
+    box-sizing:border-box;
+  }
+
+  .panel-header {
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    margin-bottom:40px;
+  }
+  .panel-header h2 {
+    margin:0;
+    font-size:32px;
+    color:#000000;
+    font-weight:700;
+  }
+  .btn-add {
+    background:#138d91;
+    color:white;
+    padding:14px 28px;
+    font-size:16px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:background .2s, transform .1s;
+  }
+  .btn-add:hover { background:#0f7c80; transform:scale(1.02); }
+
+  .tests-grid {
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:30px;
+  }
+  .test-card {
+    background:white;
+    border:3px solid #138d91;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    word-wrap:break-word;
+    overflow-wrap:break-word;
+    min-height: 300px;
+  }
+  .test-card h3 {
+    margin:0 0 12px;
+    font-size:24px;
+    color:#000;
+  }
+  .test-card p {
+    flex:1;
+    margin:0 0 20px;
+    color:#555;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .test-actions {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .test-actions a {
+    flex:1 1 100px;
+    background:#138d91;
+    color:white;
+    padding:10px;
+    border-radius:6px;
+    text-align:center;
+    text-decoration:none;
+    font-weight:600;
+    transition:background .2s, transform .1s;
+  }
+  .test-actions a:hover {
+    background:#0f7c80;
+    transform:scale(1.02);
+  }
+
+  .no-tests {
+    text-align:center;
+    font-size:18px;
+    color:#777;
+    grid-column:1 / -1;
+  }
+
+  .footer {
+    background:#f6f6f6;
+    padding:1.5rem 2rem;
+    font-size:0.9rem;
+    color:#7a7a7a;
+    border-top:1px solid #ddd;
+  }
+  .footer-container {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:1rem;
+  }
+  .footer-links {
+    display:flex;
+    gap:0.8rem;
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .footer-links a { text-decoration:none; color:#7a7a7a; transition:color .2s; }
+  .footer-links a:hover { color:#333; }
+
+  @media (max-width:768px){
+    .panel { padding:30px; }
+    .tests-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+  {% include "components/navbar.html" %}
+  <div class="return-btn-wrapper">
+    <a href="{{ url_for('teacher') }}" class="back-btn">⬅ Powrót do panelu</a>
+  </div>
+
+  <div class="main-layout">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Twoje testy</h2>
+        <a href="{{ url_for('create_test') }}" class="btn-add">➕ Dodaj test</a>
+      </div>
+
+      <div class="tests-grid">
+        {% for test in tests %}
+        <div class="test-card">
+          <h3>{{ test.title }}</h3>
+          <p>{{ test.description }}</p>
+          <div class="test-actions">
+            <a href="{{ url_for('view_test', test_id=test.id) }}">Otwórz</a>
+            <a href="{{ url_for('edit_test', test_id=test.id) }}">Edytuj</a>
+            <a href="{{ url_for('teacher_test_results', test_id=test.id) }}">Wyniki</a>
+            <a href="{{ url_for('delete_test', test_id=test.id) }}">Usuń</a>
+          </div>
+        </div>
+        {% else %}
+        <p class="no-tests">Nie masz jeszcze testów. Dodaj pierwszy!</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>© TestPiotral 2025</p>
+    <ul class="footer-links">
+      <li>•</li>
+      <li><a href="#">Polityka prywatności</a></li>
+    </ul>
+  </div>
+</footer>
+{% endblock %}

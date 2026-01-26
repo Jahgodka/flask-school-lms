@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% set page_class = "teacher-page" %}
+
+{% block head %}
+  <title>Dodaj pytanie</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body { margin:0; padding:0; height:100%; }
+    .page-container { display:flex; flex-direction:column; min-height:100vh; background:#f0f2f5; position:relative; }
+
+    .return-btn-wrapper {
+      position:absolute; top:100px; left:40px; z-index:10;
+    }
+    .back-btn {
+      background:#eeeeee; color:#333; padding:12px 24px; border-radius:8px;
+      font-weight:bold; text-decoration:none; border:2px solid #ccc;
+      transition:transform .2s, background .2s;
+    }
+    .back-btn:hover { background:#ddd; transform:scale(1.02); }
+
+    .main-layout {
+      flex:1; display:flex; justify-content:center; padding:6rem 40px 80px;
+    }
+    .panel {
+      width:100%; max-width:1200px; background:white;
+      border:3px solid #138d91; border-radius:14px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      padding:50px; box-sizing:border-box;
+    }
+
+    .panel h2 { font-size:32px; color:#000; text-align:center; margin-bottom:30px; font-weight:700; }
+
+    .form-group { margin-bottom:20px; }
+    .form-group label { display:block; font-weight:600; margin-bottom:6px; }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select {
+      width:100%; padding:10px; font-size:16px;
+      border:1px solid #ccc; border-radius:6px;
+      box-sizing:border-box;
+    }
+
+    .answers-grid {
+      display:grid; grid-template-columns: repeat(2, 1fr); gap:20px; margin-bottom:30px;
+    }
+    .answer-card {
+      padding:15px; border:1px solid #ddd; border-radius:8px;
+      background:#fafafa; transition:box-shadow .2s;
+    }
+    .answer-card:hover { box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    .answer-card label { font-weight:500; display:flex; align-items:center; gap:10px; }
+
+    .btn-submit {
+      background:#138d91; color:white; padding:14px 28px;
+      border:none; border-radius:8px; font-size:16px; font-weight:bold;
+      cursor:pointer; transition:background .2s, transform .1s;
+      display:inline-block;
+    }
+    .btn-submit:hover { background:#0f7c80; transform:scale(1.02); }
+
+    .existing-section h3 { margin-top:40px; color:#138d91; }
+    .existing-card {
+      border:1px solid #ddd; border-radius:8px;
+      padding:15px; margin-bottom:15px;
+      display:flex; justify-content:space-between; align-items:center;
+      background:#fdfdfd; transition:box-shadow .2s;
+    }
+    .existing-card:hover { box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    .existing-card form { display:flex; align-items:center; gap:10px; }
+    .existing-card input[type="number"] {
+      width:80px; padding:6px; border:1px solid #ccc; border-radius:6px;
+    }
+    .existing-card button {
+      background:#138d91; color:white; border:none; padding:8px 16px;
+      border-radius:6px; font-weight:bold; transition:background .2s;
+    }
+    .existing-card button:hover { background:#0f7c80; }
+
+    .footer {
+      background:#f6f6f6; padding:1.5rem 2rem; font-size:0.9rem;
+      color:#7a7a7a; border-top:1px solid #ddd;
+    }
+    .footer-container { display:flex; justify-content:center; align-items:center; gap:1rem; }
+    .footer-links { display:flex; gap:0.8rem; list-style:none; margin:0; padding:0; }
+    .footer-links a { text-decoration:none; color:#7a7a7a; transition:color .2s; }
+    .footer-links a:hover { color:#333; }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+  {% include "components/navbar.html" %}
+  <div class="return-btn-wrapper">
+    <a href="{{ url_for('edit_test', test_id=test.id) }}" class="back-btn">Powrót do edycji</a>
+
+  </div>
+
+  <div class="main-layout">
+    <div class="panel">
+      <h2>Dodaj pytanie do: {{ test.title }}</h2>
+
+      <form method="post">
+        <div class="form-group">
+          <label>Treść pytania:</label>
+          <input type="text" name="question_text" required>
+        </div>
+        <div class="form-group">
+          <label>Liczba punktów:</label>
+          <input type="number" name="points" min="1" required>
+        </div>
+
+        <h3>Odpowiedzi:</h3>
+        <div class="answers-grid">
+          {% for i in range(1,5) %}
+          <div class="answer-card">
+            <label>Odpowiedź {{ i }}:</label>
+            <input type="text" name="answer_{{ i }}" style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;">
+            <label>
+              <input type="radio" name="is_correct" value="{{ i }}"> Poprawna
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div style="text-align:center;">
+          <button type="submit" class="btn-submit">Zapisz pytanie</button>
+        </div>
+      </form>
+
+      <div class="existing-section">
+        <h3>Dodaj istniejące pytanie:</h3>
+        {% for q in existing_questions %}
+        <div class="existing-card">
+          <div>
+            <strong>ID: {{ q.id }}</strong> – {{ q.text }}
+          </div>
+          <form method="post">
+            <input type="hidden" name="question_id" value="{{ q.id }}">
+            <label>Punkty:</label>
+            <input type="number" name="points" value="1" min="1" required>
+            <button type="submit">Dodaj</button>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>© TestPiotral 2025</p>
+    <ul class="footer-links"><li>•</li><li><a href="#">Polityka prywatności</a></li></ul>
+  </div>
+</footer>
+{% endblock %}

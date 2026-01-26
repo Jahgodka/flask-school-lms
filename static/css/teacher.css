@@ -1,0 +1,226 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .teacher-wrapper {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    background-color: #f7f9fc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2b3444;
+  }
+  
+  /* === HEADER === */
+  .header {
+    background-color: #2b3444;
+    padding: 1.2rem 2rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .nav-left {
+    display: flex;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    gap: 12px;
+  }
+  
+  .logo {
+    height: 48px;
+  }
+  
+  .monke-left {
+    width: 82px;
+    height: 82px;
+    border-radius: 40px;
+    object-fit: cover;
+  }
+  
+  .monke-right {
+    position: absolute;
+    top: 64%;
+    right: 17rem;
+    transform: translateY(-50%);
+    width: 127px;
+    height: 127px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  
+  .navbar {
+    display: flex;
+    gap: 3.9rem;
+    font-size: 1.3rem;
+  }
+  
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+  
+  .navbar a:hover {
+    color: #e0ce77;
+  }
+  
+  .btn-logout {
+    font-size: 1.3rem;
+    padding: 0.6rem 1.4rem;
+    background-color: #ffffff;
+    color: #2b3444;
+    text-decoration: none;
+    border-radius: 18px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-logout:hover {
+    background-color: #2b3444;
+    color: white;
+  }
+  
+  /* === INFORMACJA O UŻYTKOWNIKU === */
+  .top-right {
+    text-align: right;
+    padding: 2rem 5rem 0 78%;
+    font-size: 1.35rem;
+    color: #555;
+  }
+  
+  /* === SEKCJA GŁÓWNA === */
+  .teacher-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 2rem 3rem;
+    margin-top: 0;
+  }
+  
+  .teacher-greeting {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #2b3444;
+    margin-bottom: 5rem;
+    animation: subtlePulse 2.5s ease-in-out infinite;
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
+    padding-left: 2rem;
+    margin-top: 0;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+    
+  }
+  
+  @keyframes subtlePulse {
+    30% { opacity: 1; }
+    50% { opacity: 0.80; }
+    80% { opacity: 0.75; }
+  }
+  .greeting2 {
+    font-size: 2.4rem;
+    text-align: center;
+    margin: 2rem auto 3.5rem;
+    color: #2b3444;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    background: linear-gradient(to right, #cecece06, #60606013);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    width: fit-content;
+    animation: glowPulse 4s ease-in-out infinite;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, background 0.4s ease;
+  }
+  
+  
+  @keyframes glowPulse {
+    0%, 100% {
+      box-shadow: 0 0 10px rgba(224, 206, 119, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 18px rgba(8, 26, 71, 0.5);
+    }
+  }
+  
+  /* === PRZYCISKI === */
+  .teacher-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    width: 100%;
+    max-width: 1000px;
+    justify-items: center;
+  }
+  
+  .btn-30 {
+    background-color: #2b3444;
+    color: white;
+    padding: 3rem 4rem;
+    font-size: 2.4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    max-width: 430px;
+    min-height: 170px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+  
+  .btn-30:hover {
+    background-color: #e0ce77;
+    color: #2b3444;
+    transform: translateY(-5px);
+  }
+  
+  /* === STOPKA === */
+  .footer {
+    background-color: #2b3444;
+    color: white;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    width: 100%;
+    font-size: 0.9rem;
+  }
+  
+  .footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .footer-links {
+    display: flex;
+    list-style: none;
+    gap: 0.8rem;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footer-links a {
+    text-decoration: none;
+    color: #7a7a7a;
+    transition: color 0.2s ease;
+  }
+  
+  .footer-links a:hover {
+    color: #ffffff;
+  }
+  

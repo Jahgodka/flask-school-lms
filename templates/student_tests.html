@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% set page_class = "student-page" %}
+
+{% block head %}
+  <title>Dostępne testy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body { margin:0; padding:0; height:100%; }
+    .page-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: #f0f2f5;
+      position: relative;
+    }
+
+    .return-btn-wrapper {
+      position: absolute;
+      top: 100px;
+      left: 40px;
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: #eeeeee;
+      color: #333;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      border: 2px solid #ccc;
+      transition: transform 0.2s, background 0.2s;
+      display: inline-block;
+    }
+
+    .back-btn:hover {
+      background: #ddd;
+      transform: scale(1.02);
+    }
+
+    .main-layout {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 6rem 40px 80px;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 1100px;
+      background: white;
+      border: 3px solid #138d91;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .panel h2 {
+      font-size: 32px;
+      color: #000;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .tests-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .tests-table th, .tests-table td {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .tests-table th {
+      background-color: #138d91;
+      color: white;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .tests-table td:last-child {
+      text-align: center;
+    }
+
+    .btn-start-test {
+      background-color: #28a745;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      border: none;
+      transition: background 0.2s;
+    }
+
+    .btn-start-test:hover {
+      background-color: #218838;
+    }
+
+    .no-tests {
+      text-align: center;
+      color: #777;
+      font-style: italic;
+      margin-top: 20px;
+    }
+
+    .footer {
+      background-color: #f6f6f6;
+      padding: 1.5rem 2rem;
+      font-size: 0.9rem;
+      color: #7a7a7a;
+      border-top: 1px solid #ddd;
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      gap: 0.8rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #7a7a7a;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #333;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+  {% include "components/nav_student.html" %}
+  <div class="return-btn-wrapper">
+    <a href="{{ url_for('student') }}" class="back-btn">⬅ Wróć do panelu</a>
+  </div>
+
+  <div class="main-layout">
+    <div class="panel">
+      <h2>Dostępne testy do rozwiązania</h2>
+
+      <div class="table-container">
+        {% if tests %}
+        <table class="tests-table">
+          <thead>
+            <tr>
+              <th style="width: 25%;">Tytuł</th>
+              <th style="width: 35%;">Opis</th>
+              <th style="width: 20%;">Przedmiot</th>
+              <th style="width: 20%; text-align: center;">Akcja</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for test in tests %}
+            <tr>
+              <td>{{ test.title }}</td>
+              <td>{{ test.description }}</td>
+              <td>{{ test.subject.subject_name }}</td>
+              <td>
+                <a href="{{ url_for('student_test', test_id=test.id) }}" class="btn-start-test">
+                  Rozpocznij test
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="no-tests">Brak testów do wyświetlenia.</div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>© TestPiotral 2025</p>
+    <ul class="footer-links">
+      <li>•</li>
+      <li><a href="#">Polityka prywatności</a></li>
+    </ul>
+  </div>
+</footer>
+{% endblock %}

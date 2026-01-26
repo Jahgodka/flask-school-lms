@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% set page_class = "teacher-page" %}
+
+{% block head %}
+
+
+  <title>Wyniki testu</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body { margin:0; padding:0; height:100%; }
+    .page-container { display:flex; flex-direction:column; min-height:100vh; background:#f0f2f5; position:relative; }
+
+    .return-btn-wrapper {
+      position:absolute; top:100px; left:40px; z-index:10;
+    }
+    .back-btn {
+      background:#eeeeee; color:#333; padding:12px 24px;
+      border-radius:8px; font-weight:bold; text-decoration:none;
+      border:2px solid #ccc; transition:transform .2s, background .2s;
+      display:inline-block;
+    }
+    .back-btn:hover { background:#ddd; transform:scale(1.02); }
+
+    .main-layout { flex:1; display:flex; justify-content:center; padding:6rem 40px 80px; }
+    .panel {
+      width:100%; max-width:1400px;
+      background:white; border:3px solid #138d91;
+      border-radius:14px; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      padding:50px; box-sizing:border-box;
+    }
+
+    .panel h2 {
+      font-size:32px; color:#000; text-align:center;
+      margin-bottom:30px; font-weight:700;
+    }
+
+    .results-table {
+      width:100%;
+      border-collapse:collapse;
+      margin-top:20px;
+      border:1px solid #ccc;
+    }
+    .results-table th, .results-table td {
+      padding:14px 18px;
+      border-bottom:1px solid #ddd;
+      text-align:left;
+    }
+    .results-table thead th {
+      background:#138d91; color:white; font-weight:600;
+    }
+    .results-table tbody tr:nth-child(even) {
+      background:#f9f9f9;
+    }
+    .results-table tbody tr:hover {
+      background:#f1f1f1;
+    }
+
+    .footer {
+      background:#f6f6f6; padding:1.5rem 2rem; font-size:0.9rem;
+      color:#7a7a7a; border-top:1px solid #ddd;
+    }
+    .footer-container {
+      display:flex; justify-content:center; align-items:center; gap:1rem;
+    }
+    .footer-links { display:flex; gap:0.8rem; list-style:none; margin:0; padding:0; }
+    .footer-links a { text-decoration:none; color:#7a7a7a; transition:color .2s; }
+    .footer-links a:hover { color:#333; }
+  </style>
+{% endblock %}
+
+{% block body %}
+<table class="results-table">
+    <thead>
+      <tr>
+        <th>Uczeń</th>
+        <th>Zdobyte punkty</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in results %}
+      <tr>
+        <td>{{ result.student.first_name }} {{ result.student.last_name }}</td>
+        <td>{{ result.score }} / {{ result.total_points }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="2" style="text-align:center; color:#777;">Brak wyników dla tego testu.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>© TestPiotral 2025</p>
+    <ul class="footer-links">
+      <li>•</li>
+      <li><a href="#">Polityka prywatności</a></li>
+    </ul>
+  </div>
+</footer>
+{% endblock %}

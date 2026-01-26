@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% set page_class = "teacher-page" %}
+
+{% block head %}
+  <title>{{ test.title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; }
+    .page-container { display: flex; flex-direction: column; min-height: 100vh; background: #f0f2f5; position: relative; }
+
+    .return-btn-wrapper {
+      position:absolute; top:100px; left:40px; z-index:10;
+    }
+    .back-btn {
+      background: #eeeeee; color: #333; padding:12px 24px; border-radius:8px;
+      font-weight:bold; text-decoration:none; border:2px solid #ccc;
+      transition: transform .2s, background .2s;
+      display:inline-block;
+    }
+    .back-btn:hover { background:#ddd; transform:scale(1.02); }
+
+    .main-layout {
+      flex:1;
+      display:flex;
+      justify-content:center;
+      padding:6rem 40px 80px;
+    }
+    .panel {
+      width:100%; max-width:1200px;
+      background:white; border:3px solid #138d91;
+      border-radius:14px; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      padding:50px; box-sizing:border-box;
+      position:relative;
+    }
+    .panel h2 {
+      font-size:32px; color:#000;
+      text-align:center; margin-bottom:30px; font-weight:700;
+    }
+
+    .header-row {
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      margin-bottom:30px;
+    }
+    .test-info {
+      font-size:18px;
+    }
+    .test-info p {
+      margin:4px 0;
+    }
+
+    .edit-test-btn {
+      background: #138d91;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.2s ease;
+      font-size: 18px;
+      display: inline-block;
+    }
+    .edit-test-btn:hover {
+      background: #0f7c80;
+    }
+
+    .question {
+      margin-bottom:25px;
+      padding:20px;
+      border:1px solid #ddd;
+      border-radius:8px;
+      background:#fafafa;
+    }
+    .question h3 {
+      margin:0 0 10px;
+      font-size:20px; color:#138d91;
+    }
+    .question p {
+      margin:0 0 10px;
+      font-weight:600;
+    }
+    .answer {
+      margin-left:20px;
+      padding:4px 0;
+    }
+    .correct {
+      color: green; font-weight: bold;
+    }
+
+    .no-questions {
+      text-align:center; font-size:18px; color:#777;
+    }
+
+    .footer {
+      background:#f6f6f6; padding:1.5rem 2rem; font-size:0.9rem;
+      color:#7a7a7a; border-top:1px solid #ddd;
+    }
+    .footer-container {
+      display:flex; justify-content:center; align-items:center; gap:1rem;
+    }
+    .footer-links {
+      display:flex; gap:0.8rem; list-style:none; margin:0; padding:0;
+    }
+    .footer-links a {
+      text-decoration:none; color:#7a7a7a; transition:color .2s;
+    }
+    .footer-links a:hover { color:#333; }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+  {% include "components/navbar.html" %}
+
+  <div class="return-btn-wrapper">
+    <a href="{{ url_for('teacher_tests') }}" class="back-btn">⬅ Powrót do testów</a>
+  </div>
+
+  <div class="main-layout">
+    <div class="panel">
+      <h2>{{ test.title }}</h2>
+
+      <div class="header-row">
+        <div class="test-info">
+          <p><strong>Opis:</strong> {{ test.description }}</p>
+          <p><strong>Przedmiot:</strong> {{ test.subject.subject_name }}</p>
+        </div>
+        <a href="{{ url_for('edit_test', test_id=test.id) }}" class="edit-test-btn">✏ Edytuj test</a>
+      </div>
+
+      {% for tq in test.test_questions %}
+        <div class="question">
+          <h3>{{ loop.index }}. {{ tq.question.text }}</h3>
+          <p>Punkty: {{ tq.points }}</p>
+          <ul>
+            {% for option in tq.question.answer_options %}
+              <li class="answer {% if option.is_correct %}correct{% endif %}">
+                {{ option.text }} {% if option.is_correct %}✔{% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% else %}
+        <p class="no-questions">Brak pytań przypisanych do testu.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>© TestPiotral 2025</p>
+    <ul class="footer-links"><li>•</li><li><a href="#">Polityka prywatności</a></li></ul>
+  </div>
+</footer>
+{% endblock %}

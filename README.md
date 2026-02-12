@@ -52,7 +52,7 @@ Evidence of the STLC process, including requirements analysis and defect reporti
 
 | **Database Schema (ERD)** | **Requirements (SRS)** |
 |:---:|:---:|
-| ![Database Schema](screenshots/erd.png) | ![SRS Preview](screenshots/srs_preview.png) |
+| ![Database Schema](screenshots/erd.png) | ![SRS Preview](screenshots/erd.png) |
 | *Entity Relationship Diagram showing PK/FK constraints* | *Contextual architecture and requirements* |
 
 ### Student Zone Interface
